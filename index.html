@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Log - Chest + Lats Priority Split</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .week-info {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .week-info input {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .content {
+            padding: 15px;
+        }
+
+        .day-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .day-name {
+            white-space: nowrap;
+        }
+
+        .workout-label-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        .workout-label-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .log-section {
+            margin-bottom: 15px;
+        }
+
+        .log-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .add-row-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .add-row-btn:hover {
+            background: #764ba2;
+        }
+
+        .workout-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .workout-table th {
+            background: #667eea;
+            color: white;
+            padding: 10px 8px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .workout-table td {
+            padding: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .workout-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .workout-table input,
+        .workout-table select {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .workout-table select {
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            margin: 25px 0;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .save-btn, .export-btn {
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            flex: 1;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .save-btn {
+            background: #28a745;
+        }
+
+        .save-btn:hover {
+            background: #218838;
+        }
+
+        .export-btn {
+            background: #007bff;
+        }
+
+        .export-btn:hover {
+            background: #0056b3;
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 -4px;
+            padding: 0 4px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 5px;
+            }
+
+            .header h1 {
+                font-size: 1.1em;
+            }
+
+            .day-header {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .day-name {
+                font-size: 0.9em;
+            }
+
+            .workout-label-input {
+                min-width: 0;
+                font-size: 0.85em;
+            }
+
+            .workout-table {
+                font-size: 12px;
+                min-width: 520px;
+            }
+
+            .workout-table th,
+            .workout-table td {
+                padding: 6px 3px;
+            }
+
+            .workout-table input,
+            .workout-table select {
+                font-size: 12px;
+                padding: 4px 2px;
+            }
+
+            .workout-table select {
+                min-width: 90px;
+            }
+
+            .workout-table input {
+                min-width: 55px;
+            }
+
+            .content {
+                padding: 10px;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .confirm-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #6c757d;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>GYM LOG (Chest + Lats Priority Split)</h1>
+            <div class="week-info">
+                <input type="text" id="weekDate" placeholder="Week Date" />
+                <input type="text" id="weekType" placeholder="Week Type" />
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- DAY 1 -->
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-name">MONDAY —</span>
+                    <input type="text" class="workout-label-input" id="day1-label" placeholder="CHEST + Easy Run" value="CHEST + Easy Run">
+                </div>
+
+                <div class="log-section">
+                    <div class="log-title">
+                        Lifting Log
+                        <button class="add-row-btn" onclick="addRow('day1-lifting')">+ Add Exercise</button>
+                    </div>
+                    <div class="table-scroll"><table class="workout-table" id="day1-lifting">
+                        <thead>
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Set 1</th>
+                                <th>Set 2</th>
+                                <th>Set 3</th>
+                                <th>Set 4</th>
+                                <th>Set 5</th>
+                                <th>Set 6</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table></div>
+                </div>
+
+                <div class="log-section">
+                    <div class="log-title">
+                        Run Log
+                        <button class="add-row-btn" onclick="addRunRow('day1-run')">+ Add Entry</button>
+                    </div>
+                    <div class="table-scroll"><table class="workout-table" id="day1-run">
+                        <thead>
+                            <tr>
+                                <th>Distance</th>
+                                <th>Time</th>
+                                <th>Notes</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table></div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- DAY 2 -->
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-name">TUESDAY —</span>
+                    <input type="text" class="workout-label-input" id="day2-label" placeholder="BACK / LATS + Intervals" value="BACK / LATS + Intervals">
+                </div>
+
+                <div class="log-section">
+                    <div class="log-title">
+                        Lifting Log
+                        <button class="add-row-btn" onclick="addRow('day2-lifting')">+ Add Exercise</button>
+                    </div>
+                    <div class="table-scroll"><table class="workout-table" id="day2-lifting">
+                        <thead>
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Set 1</th>
+                                <th>Set 2</th>
+                                <th>Set 3</th>
+                                <th>Set 4</th>
+                                <th>Set 5</th>
+                                <th>Set 6</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table></div>
+                </div>
+
+                <div class="log-section">
+                    <div class="log-title">
+                        Run Log
+                        <button class="add-row-btn" onclick="addRunRow('day2-run')">+ Add Entry</button>
+                    </div>
+                    <div class="table-scroll"><table class="workout-table" id="day2-run">
+                        <thead>
+                            <tr>
+                                <th>Distance</th>
+                                <th>Time</th>
+                                <th>Notes</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table></div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- DAY 3 -->
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-name">WEDNESDAY —</span>
+                    <input type="text" class="workout-label-input" id="day3-label" placeholder="SHOULDERS + CORE" value="SHOULDERS + CORE">
+                </div>
+
+                <div class="log-section">
+                    <div class="log-title">
+                        Lifting Log
+                        <button class="add-row-btn" onclick="addRow('day3-lifting')">+ Add Exercise</button>
+                    </div>
+                    <div class="table-scroll"><table class="workout-table" id="day3-lifting">
+                        <thead>
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Set 1</th>
+                                <th>Set 2</th>
+                                <th>Set 3</th>
+                                <th>Set 4</th>
+                                <th>Set 5</th>
+                                <th>Set 6</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table></div>
+                </div>
+
+                <div class="log-section">
+                    <div class="log-title">
+                        Run Log
+                        <button class="add-row-btn" onclick="addRunRow('day3-run')">+ Add Entry</button>
+                    </div>
+                    <div class="table-scroll"><table class="workout-table" id="day3-run">
+                        <thead>
+                            <tr>
+                                <th>Distance</th>
+                                <th>Time</th>
+                                <th>Notes</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table></div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- DAY 4 -->
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-name">THURSDAY —</span>
+                    <input type="text" class="workout-label-input" id="day4-label" placeholder="ACTIVE RECOVERY" value="ACTIVE RECOVERY">
+                </div>
+
+                <div class="log-section">
+                    <div class="log-title">
+                        Recovery Log
+                        <button class="add-row-btn" onclick="addRecoveryRow('day4-recovery')">+ Add Entry</button>
+                    </div>
+                    <div class="table-scroll"><table class="workout-table" id="day4-recovery">
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>Duration</th>
+                                <th>Notes</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table></div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- DAY 5 -->
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-name">FRIDAY —</span>
+                    <input type="text" class="workout-label-input" id="day5-label" placeholder="LEGS" value="LEGS">
+                </div>
+
+                <div class="log-section">
+                    <div class="log-title">
+                        Lifting Log
+                        <button class="add-row-btn" onclick="addRow('day5-lifting')">+ Add Exercise</button>
+                    </div>
+                    <div class="table-scroll"><table class="workout-table" id="day5-lifting">
+                        <thead>
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Set 1</th>
+                                <th>Set 2</th>
+                                <th>Set 3</th>
+                                <th>Set 4</th>
+                                <th>Set 5</th>
+                                <th>Set 6</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table></div>
+                </div>
+
+                <div class="log-section">
+                    <div class="log-title">
+                        Run Log
+                        <button class="add-row-btn" onclick="addRunRow('day5-run')">+ Add Entry</button>
+                    </div>
+                    <div class="table-scroll"><table class="workout-table" id="day5-run">
+                        <thead>
+                            <tr>
+                                <th>Distance</th>
+                                <th>Time</th>
+                                <th>Notes</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table></div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- DAY 6 -->
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-name">SATURDAY —</span>
+                    <input type="text" class="workout-label-input" id="day6-label" placeholder="ARMS + BONUS Chest/Lats" value="ARMS + BONUS Chest/Lats">
+                </div>
+
+                <div class="log-section">
+                    <div class="log-title">
+                        Lifting Log
+                        <button class="add-row-btn" onclick="addRow('day6-lifting')">+ Add Exercise</button>
+                    </div>
+                    <div class="table-scroll"><table class="workout-table" id="day6-lifting">
+                        <thead>
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Set 1</th>
+                                <th>Set 2</th>
+                                <th>Set 3</th>
+                                <th>Set 4</th>
+                                <th>Set 5</th>
+                                <th>Set 6</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table></div>
+                </div>
+
+                <div class="log-section">
+                    <div class="log-title">
+                        Run Log
+                        <button class="add-row-btn" onclick="addRunRow('day6-run')">+ Add Entry</button>
+                    </div>
+                    <div class="table-scroll"><table class="workout-table" id="day6-run">
+                        <thead>
+                            <tr>
+                                <th>Distance</th>
+                                <th>Time</th>
+                                <th>Notes</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table></div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- DAY 7 -->
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-name">SUNDAY —</span>
+                    <input type="text" class="workout-label-input" id="day7-label" placeholder="RUN + CALISTHENICS" value="RUN + CALISTHENICS">
+                </div>
+
+                <div class="log-section">
+                    <div class="log-title">
+                        Run Log
+                        <button class="add-row-btn" onclick="addRunRow('day7-run')">+ Add Entry</button>
+                    </div>
+                    <div class="table-scroll"><table class="workout-table" id="day7-run">
+                        <thead>
+                            <tr>
+                                <th>Distance</th>
+                                <th>Time</th>
+                                <th>Notes</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table></div>
+                </div>
+
+                <div class="log-section">
+                    <div class="log-title">
+                        Calisthenics Log
+                        <button class="add-row-btn" onclick="addRow('day7-calisthenics')">+ Add Exercise</button>
+                    </div>
+                    <div class="table-scroll"><table class="workout-table" id="day7-calisthenics">
+                        <thead>
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Set 1</th>
+                                <th>Set 2</th>
+                                <th>Set 3</th>
+                                <th>Set 4</th>
+                                <th>Set 5</th>
+                                <th>Set 6</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table></div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="save-btn" onclick="saveData()">Save Workout</button>
+                <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding custom exercises -->
+    <div id="customExerciseModal" class="modal">
+        <div class="modal-content">
+            <h3>Add Custom Exercise</h3>
+            <input type="text" id="customExerciseName" placeholder="Enter exercise name" />
+            <div class="modal-buttons">
+                <button class="confirm-btn" onclick="confirmCustomExercise()">Add</button>
+                <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Exercise database organized by category
+        const exercises = {
+            chest: [
+                'Bench Press', 'Incline Bench Press', 'Decline Bench Press',
+                'Dumbbell Press', 'Incline Dumbbell Press', 'Chest Fly',
+                'Cable Fly', 'Push-Ups', 'Dips'
+            ],
+            back: [
+                'Pull-Ups', 'Chin-Ups', 'Lat Pulldown', 'Cable Row',
+                'Barbell Row', 'Dumbbell Row', 'T-Bar Row', 'Deadlift',
+                'Face Pulls', 'Reverse Fly'
+            ],
+            shoulders: [
+                'Overhead Press', 'Arnold Press', 'Lateral Raise',
+                'Front Raise', 'Rear Delt Fly', 'Upright Row',
+                'Shrugs', 'Face Pulls'
+            ],
+            legs: [
+                'Squat', 'Front Squat', 'Leg Press', 'Lunges',
+                'Bulgarian Split Squat', 'Leg Extension', 'Leg Curl',
+                'Romanian Deadlift', 'Calf Raise'
+            ],
+            arms: [
+                'Barbell Curl', 'Dumbbell Curl', 'Hammer Curl',
+                'Preacher Curl', 'Tricep Dips', 'Skull Crushers',
+                'Tricep Pushdown', 'Overhead Tricep Extension'
+            ],
+            core: [
+                'Plank', 'Side Plank', 'Crunches', 'Leg Raises',
+                'Russian Twists', 'Cable Crunches', 'Ab Wheel'
+            ],
+            calisthenics: [
+                'Push-Ups', 'Pull-Ups', 'Dips', 'Burpees',
+                'Mountain Climbers', 'Jump Squats', 'Lunges'
+            ]
+        };
+
+        let allExercises = [...new Set(Object.values(exercises).flat())].sort();
+        let currentTableForCustom = null;
+
+        // Add a lifting row
+        function addRow(tableId) {
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const row = tbody.insertRow();
+
+            // Exercise dropdown cell
+            const exerciseCell = row.insertCell();
+            const select = document.createElement('select');
+            select.innerHTML = '<option value="">Select Exercise</option>';
+
+            allExercises.forEach(ex => {
+                const option = document.createElement('option');
+                option.value = ex;
+                option.textContent = ex;
+                select.appendChild(option);
+            });
+
+            // Add custom option
+            const customOption = document.createElement('option');
+            customOption.value = 'CUSTOM';
+            customOption.textContent = '+ Add Custom Exercise';
+            select.appendChild(customOption);
+
+            select.addEventListener('change', function() {
+                if (this.value === 'CUSTOM') {
+                    currentTableForCustom = tableId;
+                    document.getElementById('customExerciseModal').style.display = 'block';
+                    this.selectedIndex = 0;
+                }
+            });
+
+            exerciseCell.appendChild(select);
+
+            // Set cells
+            for (let i = 0; i < 6; i++) {
+                const setCell = row.insertCell();
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = 'Reps x Weight';
+                setCell.appendChild(input);
+            }
+
+            // Delete button cell
+            const deleteCell = row.insertCell();
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '×';
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.onclick = function() { row.remove(); };
+            deleteCell.appendChild(deleteBtn);
+        }
+
+        // Add a run row
+        function addRunRow(tableId) {
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const row = tbody.insertRow();
+
+            const fields = ['Distance', 'Time', 'Notes'];
+            fields.forEach(field => {
+                const cell = row.insertCell();
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = field;
+                cell.appendChild(input);
+            });
+
+            const deleteCell = row.insertCell();
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '×';
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.onclick = function() { row.remove(); };
+            deleteCell.appendChild(deleteBtn);
+        }
+
+        // Add a recovery row
+        function addRecoveryRow(tableId) {
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const row = tbody.insertRow();
+
+            const fields = ['Activity', 'Duration', 'Notes'];
+            fields.forEach(field => {
+                const cell = row.insertCell();
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = field;
+                cell.appendChild(input);
+            });
+
+            const deleteCell = row.insertCell();
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '×';
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.onclick = function() { row.remove(); };
+            deleteCell.appendChild(deleteBtn);
+        }
+
+        // Modal functions
+        function closeModal() {
+            document.getElementById('customExerciseModal').style.display = 'none';
+            document.getElementById('customExerciseName').value = '';
+            currentTableForCustom = null;
+        }
+
+        function confirmCustomExercise() {
+            const customName = document.getElementById('customExerciseName').value.trim();
+            if (customName && !allExercises.includes(customName)) {
+                allExercises.push(customName);
+                allExercises.sort();
+
+                // Update all exercise dropdowns
+                document.querySelectorAll('select').forEach(select => {
+                    if (select.options[0].value === '') {
+                        const currentValue = select.value;
+                        select.innerHTML = '<option value="">Select Exercise</option>';
+
+                        allExercises.forEach(ex => {
+                            const option = document.createElement('option');
+                            option.value = ex;
+                            option.textContent = ex;
+                            select.appendChild(option);
+                        });
+
+                        const customOption = document.createElement('option');
+                        customOption.value = 'CUSTOM';
+                        customOption.textContent = '+ Add Custom Exercise';
+                        select.appendChild(customOption);
+
+                        if (select.closest('table').id === currentTableForCustom) {
+                            select.value = customName;
+                        } else {
+                            select.value = currentValue;
+                        }
+                    }
+                });
+
+                alert(`Added "${customName}" to exercise list!`);
+            }
+            closeModal();
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            const data = {
+                weekDate: document.getElementById('weekDate').value,
+                weekType: document.getElementById('weekType').value,
+                dayLabels: {
+                    day1: document.getElementById('day1-label').value,
+                    day2: document.getElementById('day2-label').value,
+                    day3: document.getElementById('day3-label').value,
+                    day4: document.getElementById('day4-label').value,
+                    day5: document.getElementById('day5-label').value,
+                    day6: document.getElementById('day6-label').value,
+                    day7: document.getElementById('day7-label').value
+                },
+                tables: {}
+            };
+
+            document.querySelectorAll('.workout-table').forEach(table => {
+                const tableId = table.id;
+                const rows = [];
+
+                table.querySelectorAll('tbody tr').forEach(row => {
+                    const rowData = [];
+                    row.querySelectorAll('input, select').forEach(input => {
+                        rowData.push(input.value);
+                    });
+                    rows.push(rowData);
+                });
+
+                data.tables[tableId] = rows;
+            });
+
+            localStorage.setItem('workoutData', JSON.stringify(data));
+            localStorage.setItem('customExercises', JSON.stringify(allExercises));
+
+            alert('Workout saved successfully!');
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            const savedData = localStorage.getItem('workoutData');
+            const savedExercises = localStorage.getItem('customExercises');
+
+            if (savedExercises) {
+                allExercises = JSON.parse(savedExercises);
+            }
+
+            if (savedData) {
+                const data = JSON.parse(savedData);
+
+                document.getElementById('weekDate').value = data.weekDate || '';
+                document.getElementById('weekType').value = data.weekType || '';
+
+                // Load day labels
+                if (data.dayLabels) {
+                    document.getElementById('day1-label').value = data.dayLabels.day1 || '';
+                    document.getElementById('day2-label').value = data.dayLabels.day2 || '';
+                    document.getElementById('day3-label').value = data.dayLabels.day3 || '';
+                    document.getElementById('day4-label').value = data.dayLabels.day4 || '';
+                    document.getElementById('day5-label').value = data.dayLabels.day5 || '';
+                    document.getElementById('day6-label').value = data.dayLabels.day6 || '';
+                    document.getElementById('day7-label').value = data.dayLabels.day7 || '';
+                }
+
+                Object.keys(data.tables).forEach(tableId => {
+                    const table = document.getElementById(tableId);
+                    if (table) {
+                        const rows = data.tables[tableId];
+                        rows.forEach(rowData => {
+                            if (tableId.includes('run')) {
+                                addRunRow(tableId);
+                            } else if (tableId.includes('recovery')) {
+                                addRecoveryRow(tableId);
+                            } else {
+                                addRow(tableId);
+                            }
+
+                            const tbody = table.querySelector('tbody');
+                            const lastRow = tbody.rows[tbody.rows.length - 1];
+                            const inputs = lastRow.querySelectorAll('input, select');
+
+                            rowData.forEach((value, index) => {
+                                if (inputs[index]) {
+                                    inputs[index].value = value;
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+        }
+
+        // Export workout data as CSV
+        function exportCSV() {
+            const weekDate = document.getElementById('weekDate').value || 'undated';
+            const weekType = document.getElementById('weekType').value || '';
+            const lines = [];
+
+            lines.push('Gym Log - Chest + Lats Priority Split');
+            lines.push('Week Date,' + csvEscape(weekDate));
+            lines.push('Week Type,' + csvEscape(weekType));
+            lines.push('');
+
+            const dayNames = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+            const dayNums = [1, 2, 3, 4, 5, 6, 7];
+
+            dayNums.forEach((num, idx) => {
+                const label = document.getElementById('day' + num + '-label').value;
+                lines.push(dayNames[idx] + ' - ' + csvEscape(label));
+
+                // Find all tables for this day
+                const tables = document.querySelectorAll('[id^="day' + num + '-"]');
+                tables.forEach(table => {
+                    if (!table.classList.contains('workout-table')) return;
+                    const tableType = table.id.replace('day' + num + '-', '');
+                    const headers = [];
+                    table.querySelectorAll('thead th').forEach(th => {
+                        if (th.textContent.trim()) headers.push(th.textContent.trim());
+                    });
+
+                    const rows = table.querySelectorAll('tbody tr');
+                    if (rows.length > 0) {
+                        lines.push(tableType.charAt(0).toUpperCase() + tableType.slice(1) + ' Log');
+                        lines.push(headers.join(','));
+                        rows.forEach(row => {
+                            const cells = [];
+                            row.querySelectorAll('input, select').forEach(input => {
+                                cells.push(csvEscape(input.value));
+                            });
+                            if (cells.some(c => c !== '' && c !== '""')) {
+                                lines.push(cells.join(','));
+                            }
+                        });
+                    }
+                });
+                lines.push('');
+            });
+
+            const csvContent = lines.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            const filename = 'workout-' + weekDate.replace(/[^a-zA-Z0-9]/g, '-') + '.csv';
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function csvEscape(val) {
+            if (!val) return '';
+            val = String(val);
+            if (val.includes(',') || val.includes('"') || val.includes('\n')) {
+                return '"' + val.replace(/"/g, '""') + '"';
+            }
+            return val;
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('customExerciseModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Load data on page load
+        window.onload = loadData;
+    </script>
+</body>
+</html>
